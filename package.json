@@ -13,6 +13,7 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
+    "security:secrets": "bash ./scripts/check-secrets.sh",
     "migrate": "npm run migrate --workspace=backend",
     "migrate:down": "npm run migrate:down --workspace=backend"
   },

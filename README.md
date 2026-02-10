@@ -54,6 +54,8 @@ npm install
 ```bash
 cp .env.example .env
 # Edit .env and add your secrets
+
+cp frontend/.env.example frontend/.env.local
 ```
 
 4. Start PostgreSQL
@@ -142,6 +144,17 @@ npm run test:e2e --workspace=frontend
 - SQL injection prevention (parameterized queries)
 - XSS prevention (input validation, output encoding)
 - CORS configured for frontend origin only
+
+## API Key / Secret Management
+
+- Keep secrets only in local runtime env files (`.env`, `backend/.env`, `frontend/.env.local`) and never commit them.
+- Production requires a real `SENDGRID_API_KEY`; startup fails if key is missing or malformed.
+- Add only safe placeholders to `*.env.example` files.
+- Run secret scanning before push:
+
+```bash
+npm run security:secrets
+```
 
 ## Deployment
 

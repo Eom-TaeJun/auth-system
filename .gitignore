@@ -19,7 +19,10 @@ dist/
 
 # Environment variables
 .env
-.env*.local
+.env.*
+!.env.example
+!backend/.env.example
+!frontend/.env.example
 
 # Vercel
 .vercel

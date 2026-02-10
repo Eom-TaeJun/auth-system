@@ -83,4 +83,35 @@ describe('env config', () => {
       'JWT_REFRESH_SECRET must be at least 32 characters long'
     );
   });
+
+  it('throws when NODE_ENV is invalid', () => {
+    process.env.NODE_ENV = 'staging';
+
+    expect(() => loadEnvModule()).toThrow(
+      'NODE_ENV must be one of: development, test, production'
+    );
+  });
+
+  it('throws when FRONTEND_URL is not a valid URL', () => {
+    process.env.FRONTEND_URL = 'not-a-url';
+
+    expect(() => loadEnvModule()).toThrow('FRONTEND_URL must be a valid URL');
+  });
+
+  it('throws when SENDGRID_API_KEY is malformed', () => {
+    process.env.SENDGRID_API_KEY = 'invalid-key';
+
+    expect(() => loadEnvModule()).toThrow(
+      'SENDGRID_API_KEY must start with "SG."'
+    );
+  });
+
+  it('throws in production when SENDGRID_API_KEY is missing', () => {
+    process.env.NODE_ENV = 'production';
+    delete process.env.SENDGRID_API_KEY;
+
+    expect(() => loadEnvModule()).toThrow(
+      'SENDGRID_API_KEY must be configured in production'
+    );
+  });
 });
