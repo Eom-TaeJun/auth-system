@@ -9,7 +9,7 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:e2e": "playwright test",
+    "test:e2e": "bash ./scripts/run-playwright-e2e.sh",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

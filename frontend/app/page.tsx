@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldCheck, Lock, UserCheck } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
@@ -21,12 +22,18 @@ export default function Home() {
           Fast, secure, and developer-friendly.
         </p>
         <div className="flex gap-4 justify-center">
-          <Button asChild size="lg">
-            <Link href="/login">Sign In</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link href="/register">Create Account</Link>
-          </Button>
+          <Link
+            className={cn(buttonVariants({ size: "lg", variant: "default" }))}
+            href="/login"
+          >
+            Sign In
+          </Link>
+          <Link
+            className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+            href="/register"
+          >
+            Create Account
+          </Link>
         </div>
       </section>
 

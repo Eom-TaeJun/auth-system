@@ -7,6 +7,54 @@
 
 ---
 
+## 🔔 Latest Session Update (2026-02-10)
+
+- Phase 7(Backend Testing) 완료:
+  - 테스트 확장 파일:
+    - `backend/tests/unit/authenticate.test.ts`
+    - `backend/tests/unit/errorHandler.test.ts`
+    - `backend/tests/unit/errors.test.ts`
+    - `backend/tests/unit/env.test.ts`
+    - `backend/tests/unit/database.unit.test.ts`
+  - 기존 테스트 보강:
+    - `backend/tests/unit/authService.test.ts`
+    - `backend/tests/unit/tokenService.test.ts`
+    - `backend/tests/unit/password.test.ts`
+    - `backend/tests/integration/auth.test.ts`
+    - `backend/tests/integration/users.test.ts`
+    - `backend/tests/unit/userModel.test.ts`
+    - `backend/tests/unit/verificationTokenModel.test.ts`
+    - `backend/tests/unit/refreshTokenModel.test.ts`
+  - 커버리지 설정 업데이트:
+    - `backend/jest.config.js`에서 CLI 전용 `src/config/migrate.ts` 제외
+- Frontend 테스트 안정화:
+  - `frontend/tests/auth-forms.test.tsx`에서 `next/link` mock + `act` 적용
+  - 신규 테스트 추가:
+    - `frontend/tests/protected-layout.test.tsx`
+    - `frontend/tests/profile-page.test.tsx`
+  - Playwright E2E 추가:
+    - `frontend/playwright.config.ts`
+    - `frontend/e2e/auth-flows.spec.ts`
+    - `frontend/scripts/run-playwright-e2e.sh`
+  - Jest/Playwright 경로 분리:
+    - `frontend/jest.config.js`에서 `e2e` 제외
+  - `frontend/package.json`의 `test:e2e`를 스크립트 래퍼로 변경
+  - `frontend/jest.config.js`에서 `NEXT_IGNORE_INCORRECT_LOCKFILE=1` 설정
+  - `frontend/jest.setup.js` 동기화
+- 검증 결과:
+  - `npm run type-check --workspace=backend` 통과
+  - `npm run test --workspace=backend -- --runInBand` 통과 (16 suites, 135 tests)
+  - `npm run test:coverage --workspace=backend -- --runInBand` 통과
+    - Statements 100%
+    - Branches 97.52%
+    - Functions 100%
+    - Lines 100%
+  - `npm run type-check --workspace=frontend` 통과
+  - `npm run test --workspace=frontend -- --runInBand` 통과 (5 suites, 15 tests)
+  - `npm run test:e2e --workspace=frontend` 통과 (4 scenarios)
+
+---
+
 ## ✅ Completed
 
 ### Phase 0: Project Initialization (Task #1)
@@ -86,76 +134,84 @@ auth-system/
 
 ---
 
-## 🔄 In Progress
+## ✅ Recently Completed
 
 ### Phase 2: Core Services (Task #3)
-**Status:** 🔄 In progress by backend-agent
-**Agent:** backend-agent (assigned)
-**Expected Deliverables:**
-- Password hashing (bcrypt, 12 rounds)
-- JWT service (access + refresh tokens)
-- Email service (SendGrid mock)
-- Validators (email, password strength)
-- authService business logic
-- Unit tests (>80% coverage)
+**Status:** ✅ Implemented and validated
+**Agent:** backend-agent
+**Delivered:**
+- `password.ts`, `validators.ts`, `errors.ts`
+- `tokenService.ts`, `emailService.ts`, `authService.ts`
+- Unit tests for password/token/validators/auth service
+
+### Phase 3: API Routes (Task #4)
+**Status:** ✅ Implemented and validated
+**Agent:** backend-agent
+**Delivered:**
+- Fastify server entrypoint (`src/index.ts`)
+- Authentication middleware (`middleware/authenticate.ts`)
+- Global error handler (`middleware/errorHandler.ts`)
+- Auth routes (`routes/auth.ts`)
+- User routes (`routes/users.ts`)
+- Integration tests (`tests/integration/auth.test.ts`, `tests/integration/users.test.ts`)
+
+### Phase 5: Auth Forms (Task #6)
+**Status:** ✅ Implemented and validated
+**Agent:** frontend-agent
+**Delivered:**
+- Route group + pages: `/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password`
+- `react-hook-form` + `zod` validation schemas
+- Auth UI components (`LoginForm`, `RegisterForm`, `PasswordStrengthIndicator`)
+- Frontend tests:
+  - `tests/password-strength-indicator.test.tsx`
+  - `tests/schemas.test.ts`
+
+### Phase 6: Protected Routes (Task #7)
+**Status:** ✅ Implemented
+**Agent:** frontend-agent
+**Delivered:**
+- Auth context 실제 구현 (`login`, `register`, `logout`, `refreshUser`, `isAuthenticated`)
+- Axios 401 자동 토큰 갱신 인터셉터
+- Protected route layout + `/dashboard`, `/profile`
+- Profile email update flow (`/api/users/me` PATCH)
+
+### Phase 7: Backend Testing (Task #8)
+**Status:** ✅ Completed
+**Agent:** qa-agent
+**Progress:**
+- Backend test suites: 16 passed
+- Coverage threshold(80%) 충족:
+  - Statements 100%
+  - Branches 97.52%
+  - Functions 100%
+  - Lines 100%
 
 ---
 
 ## 📋 Pending Tasks
 
-### Phase 3: API Routes (Task #4)
-**Status:** ⏸️ Blocked by Task #3
-**Agent:** backend-agent
-**Deliverables:**
-- Fastify server setup
-- Authentication middleware
-- Auth routes: register, login, logout, verify, reset
-- User routes: /api/users/me
-- Rate limiting
-- CORS configuration
-- Integration tests
-
-### Phase 5: Auth Forms (Task #6)
-**Status:** ⏸️ Blocked by Task #4 & #5
-**Agent:** frontend-agent (next assignment)
-**Deliverables:**
-- Login page with form
-- Register page with password strength
-- Verify email page
-- Forgot password page
-- Reset password page
-- react-hook-form + Zod validation
-- Component tests
-
-### Phase 6: Protected Routes (Task #7)
-**Status:** ⏸️ Blocked by Task #6
-**Agent:** frontend-agent
-**Deliverables:**
-- Complete useAuth hook
-- Protected route wrapper
-- Dashboard page
-- Profile page
-- Axios token refresh interceptor
-
-### Phase 7: Backend Testing (Task #8)
-**Status:** ⏸️ Blocked by Task #4
-**Agent:** qa-agent (Haiku - to be spawned)
-**Deliverables:**
-- Unit tests for all services
-- Integration tests for API flows
-- Test database setup
-- Coverage report (>80%)
-
 ### Phase 8: Frontend Testing (Task #9)
-**Status:** ⏸️ Blocked by Task #7
+**Status:** 🔄 In progress
 **Agent:** qa-agent
-**Deliverables:**
-- Component tests (RTL)
-- E2E tests (Playwright)
-- Test mocks and utilities
+**Progress:**
+- RTL component tests 확장 완료:
+  - `frontend/tests/auth-forms.test.tsx`
+  - `frontend/tests/password-strength-indicator.test.tsx`
+  - `frontend/tests/schemas.test.ts`
+  - `frontend/tests/protected-layout.test.tsx`
+  - `frontend/tests/profile-page.test.tsx`
+- Playwright E2E 4개 시나리오 추가/통과:
+  - unauthenticated redirect
+  - register -> verify-email redirect
+  - verify-email token flow
+  - login -> dashboard -> profile update
+- Test infra 정리:
+  - `frontend/playwright.config.ts`
+  - `frontend/scripts/run-playwright-e2e.sh` (Linux missing lib fallback)
+  - `frontend/jest.config.js`에서 `e2e` 경로 제외
 
 ### Phase 9: Security Audit (Task #10)
-**Status:** ⏸️ Blocked by Tasks #4, #8, #9
+**Status:** ⏸️ Blocked by Tasks #8, #9
 **Agent:** codex-reviewer (Sonnet - to be spawned)
 **Deliverables:**
 - Run `codex review --uncommitted`
@@ -204,9 +260,9 @@ cat ~/.claude/tasks/auth-team/*.json
 
 ### Option 2: Manual Implementation
 Follow the plan in original order:
-1. Complete Phase 1 (Database) - See Task #2 description above
-2. Complete Phase 4 (Frontend Foundation) - See Task #5 description above
-3. Then proceed sequentially through remaining phases
+1. Phase 8 (Frontend Testing) 진행
+2. Phase 9 (Security Audit) 진행
+3. Phase 10-11 문서화/최종 통합 진행
 
 ### Option 3: Clean Start
 ```bash
@@ -273,15 +329,15 @@ npm run migrate:down   # Rollback
 
 ```
 Phase 0 (Task #1) ✅
-    ├─> Phase 1 (Task #2) 🔄
+    ├─> Phase 1 (Task #2) ✅
     │       └─> Phase 2 (Task #3)
     │               └─> Phase 3 (Task #4)
-    │                       └─> Phase 7 (Task #8)
+    │                       └─> Phase 7 (Task #8) ✅
     │
-    └─> Phase 4 (Task #5) 🔄
+    └─> Phase 4 (Task #5) ✅
             └─> Phase 5 (Task #6)
                     └─> Phase 6 (Task #7)
-                            └─> Phase 8 (Task #9)
+                            └─> Phase 8 (Task #9) 🔄
 
 Phase 7 & 8 (Tasks #8, #9)
     └─> Phase 9 (Task #10) - Security Audit
@@ -330,17 +386,17 @@ If you encounter issues:
 ## 🎯 Next Steps (Choose One)
 
 **A. Continue with AI Agents:**
-- Spawn backend-agent again for Task #2
-- Spawn frontend-agent again for Task #5
-- They will continue from where they left off
+- Spawn qa-agent for remaining Frontend Testing(Task #9) + E2E
+- Spawn codex-reviewer for Security Audit(Task #10)
+- Then finalize docs/integration(Task #11, #12)
 
 **B. Implement Manually:**
-- Start with Phase 1: Database Setup
-- Follow the detailed specs in this doc
-- Test each phase before moving on
+- Start with Phase 8: Frontend Testing completion
+- Then run Security Audit
+- Finish docs and final integration
 
 **C. Hybrid Approach:**
-- Complete urgent phases manually
-- Use agents for repetitive work (tests, docs)
+- Complete E2E/security manually
+- Use agents for docs polishing and regression sweeps
 
 Choose based on your time, budget, and preference!

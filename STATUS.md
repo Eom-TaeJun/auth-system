@@ -5,6 +5,44 @@
 
 ---
 
+## 🔔 최신 세션 반영 (2026-02-10)
+
+- Phase 7(Backend Testing) 완료
+  - 추가/보강 테스트:
+    - `backend/tests/unit/authenticate.test.ts`
+    - `backend/tests/unit/errorHandler.test.ts`
+    - `backend/tests/unit/errors.test.ts`
+    - `backend/tests/unit/env.test.ts`
+    - `backend/tests/unit/database.unit.test.ts`
+    - `backend/tests/unit/authService.test.ts` (에러 분기 확장)
+    - `backend/tests/unit/tokenService.test.ts` (토큰/만료 분기 확장)
+    - `backend/tests/integration/auth.test.ts`
+    - `backend/tests/integration/users.test.ts`
+    - 모델 테스트 3종 분기 보강
+  - `backend/jest.config.js`에서 `src/config/migrate.ts`(CLI) 커버리지 제외
+- Frontend 테스트 안정화
+  - `frontend/tests/auth-forms.test.tsx`의 `act`/`next/link` mock 적용
+  - 신규 컴포넌트 테스트:
+    - `frontend/tests/protected-layout.test.tsx`
+    - `frontend/tests/profile-page.test.tsx`
+  - Playwright E2E 추가:
+    - `frontend/playwright.config.ts`
+    - `frontend/e2e/auth-flows.spec.ts`
+    - `frontend/scripts/run-playwright-e2e.sh`
+  - `frontend/jest.config.js`에서 `e2e` 경로 제외(단위테스트/브라우저테스트 분리)
+  - `frontend/jest.config.js`에 `NEXT_IGNORE_INCORRECT_LOCKFILE=1` 적용
+  - `frontend/jest.setup.js` 동기화
+- 실행/검증 현황
+  - `npm run type-check --workspace=backend` 통과
+  - `npm run test --workspace=backend -- --runInBand` 통과 (16 suites, 135 tests)
+  - `npm run test:coverage --workspace=backend -- --runInBand` 통과
+    - Statements 100%, Branches 97.52%, Functions 100%, Lines 100%
+  - `npm run type-check --workspace=frontend` 통과
+  - `npm run test --workspace=frontend -- --runInBand` 통과 (5 suites, 15 tests)
+  - `npm run test:e2e --workspace=frontend` 통과 (4 scenarios)
+
+---
+
 ## ✅ 완료된 작업
 
 ### Phase 0: 프로젝트 구조 (커밋: 9b89dff)
@@ -61,6 +99,75 @@
 - ✅ 접근성 준비
 - ✅ 타입 안전성
 
+### Phase 2: Core Services (커밋 예정)
+**Backend Agent 완료**
+
+**파일 (10개):**
+- `backend/src/utils/password.ts`
+- `backend/src/utils/validators.ts`
+- `backend/src/utils/errors.ts`
+- `backend/src/services/tokenService.ts`
+- `backend/src/services/emailService.ts`
+- `backend/src/services/authService.ts`
+- `backend/tests/unit/password.test.ts`
+- `backend/tests/unit/validators.test.ts`
+- `backend/tests/unit/tokenService.test.ts`
+- `backend/tests/unit/authService.test.ts`
+
+### Phase 3: API Routes (커밋 예정)
+**Backend Agent 완료**
+
+**파일 (6개):**
+- `backend/src/index.ts`
+- `backend/src/middleware/authenticate.ts`
+- `backend/src/middleware/errorHandler.ts`
+- `backend/src/routes/auth.ts`
+- `backend/src/routes/users.ts`
+- `backend/tests/integration/auth.test.ts`
+
+### Phase 5: Auth Forms (커밋 예정)
+**Frontend Agent 완료**
+
+**파일 (13개):**
+- `frontend/app/(auth)/layout.tsx`
+- `frontend/app/(auth)/login/page.tsx`
+- `frontend/app/(auth)/register/page.tsx`
+- `frontend/app/(auth)/verify-email/page.tsx`
+- `frontend/app/(auth)/forgot-password/page.tsx`
+- `frontend/app/(auth)/reset-password/page.tsx`
+- `frontend/components/auth/LoginForm.tsx`
+- `frontend/components/auth/RegisterForm.tsx`
+- `frontend/components/auth/PasswordStrengthIndicator.tsx`
+- `frontend/lib/schemas.ts`
+- `frontend/tests/password-strength-indicator.test.tsx`
+- `frontend/tests/schemas.test.ts`
+- `frontend/app/page.tsx` (auth CTA link rendering 개선)
+
+### Phase 6: Protected Routes (커밋 예정)
+**Frontend Agent 완료**
+
+**파일 (5개):**
+- `frontend/hooks/useAuth.tsx`
+- `frontend/lib/api.ts` (refresh interceptor 포함)
+- `frontend/app/(protected)/layout.tsx`
+- `frontend/app/(protected)/dashboard/page.tsx`
+- `frontend/app/(protected)/profile/page.tsx`
+
+### Phase 7: Backend Testing (완료)
+**QA Agent 완료**
+
+**추가 파일 (10개+):**
+- `backend/tests/unit/userModel.test.ts`
+- `backend/tests/unit/verificationTokenModel.test.ts`
+- `backend/tests/unit/refreshTokenModel.test.ts`
+- `backend/tests/unit/emailService.test.ts`
+- `backend/tests/integration/users.test.ts`
+- `backend/tests/unit/authenticate.test.ts`
+- `backend/tests/unit/errorHandler.test.ts`
+- `backend/tests/unit/errors.test.ts`
+- `backend/tests/unit/env.test.ts`
+- `backend/tests/unit/database.unit.test.ts`
+
 ---
 
 ## 📝 문서화 완료
@@ -84,33 +191,14 @@
 ## 📋 남은 작업
 
 ### 즉시 시작 가능
-- **Phase 2: Core Services** (백엔드 - 2-3시간)
-  - Password utils, Token service, Email service
-  - Auth service (register, login, refresh, verify, reset)
-  - Unit tests
+- **Phase 8: Frontend Testing** (QA - 2-3시간)
+  - 컴포넌트 테스트 확장
+  - E2E 테스트(Playwright) 추가
 
-### Phase 2 완료 후
-- **Phase 3: API Routes** (백엔드 - 2시간)
-  - Fastify 서버
-  - Auth endpoints (/api/auth/*)
-  - User endpoints (/api/users/*)
-  - Integration tests
-
-### Phase 3 완료 후 (병렬 가능)
-- **Phase 5: Auth Forms** (프론트 - 3시간)
-  - Login, Register, Verify, Forgot, Reset 페이지
-  - react-hook-form + Zod 검증
-  - 비밀번호 강도 표시
-
-- **Phase 7: Backend Testing** (QA - 2-3시간)
-  - 모든 서비스 유닛 테스트
-  - API 통합 테스트
-
-### Phase 5 완료 후
-- **Phase 6: Protected Routes** (프론트 - 2시간)
-  - Dashboard, Profile 페이지
-  - useAuth 완성
-  - Token refresh interceptor
+### 진행 중 작업
+- **Phase 8: Frontend Testing** (QA - 진행 중)
+  - 컴포넌트 테스트 추가 확장
+  - Playwright E2E 추가 완료, 시나리오 추가 확장 진행
 
 ### Phase 6 완료 후
 - **Phase 8: Frontend Testing** (QA - 2-3시간)
@@ -147,9 +235,9 @@ cat TODO.md                      # 체크리스트
 cat PHASES_QUICK_REFERENCE.md   # 빠른 참조
 cat IMPLEMENTATION_PLAN.md       # 상세 코드
 
-# Phase 2부터 시작
-cd backend
-# IMPLEMENTATION_PLAN.md 참고해서 구현
+# 다음 시작 권장: Phase 8(Frontend Testing) 마무리
+cd frontend
+# TODO.md 참고해서 구현
 ```
 
 ### AI 에이전트로 재시작
@@ -157,7 +245,7 @@ cd backend
 cd ~/projects/auth-system
 
 # Claude Code 실행 후:
-# "Continue the auth-system implementation from Phase 2"
+# "Continue the auth-system implementation from Phase 8"
 # 또는
 # "Resume work on auth-team"
 ```
@@ -170,35 +258,32 @@ cd ~/projects/auth-system
 
 ## 📊 진행률
 
-**전체:** 3/12 phases (25%)
+**전체:** 8/12 phases (67%)
 
 | Phase | 상태 | 담당 | 시간 |
 |-------|------|------|------|
 | 0. 프로젝트 구조 | ✅ | Lead | 30분 |
 | 1. 데이터베이스 | ✅ | Backend | 1시간 |
-| 2. Core Services | ⏸️ | Backend | 2-3시간 |
-| 3. API Routes | ⏸️ | Backend | 2시간 |
+| 2. Core Services | ✅ | Backend | 2-3시간 |
+| 3. API Routes | ✅ | Backend | 2시간 |
 | 4. 프론트 기초 | ✅ | Frontend | 2시간 |
-| 5. Auth Forms | ⏸️ | Frontend | 3시간 |
-| 6. Protected Routes | ⏸️ | Frontend | 2시간 |
-| 7. Backend Testing | ⏸️ | QA | 2-3시간 |
-| 8. Frontend Testing | ⏸️ | QA | 2-3시간 |
+| 5. Auth Forms | ✅ | Frontend | 3시간 |
+| 6. Protected Routes | ✅ | Frontend | 2시간 |
+| 7. Backend Testing | ✅ | QA | 2-3시간 |
+| 8. Frontend Testing | 🔄 | QA | 2-3시간 |
 | 9. Security Audit | ⏸️ | Codex | 1-2시간 |
 | 10. Documentation | ⏸️ | Lead | 1시간 |
 | 11. Integration | ⏸️ | Lead | 1-2시간 |
 
-**예상 남은 시간:** 17-22시간 (순차) / 12-15시간 (병렬)
+**예상 남은 시간:** 7-11시간 (순차) / 5-7시간 (병렬)
 
 ---
 
 ## 🎯 핵심 우선순위
 
-1. **Phase 2** - 다른 모든 것의 기반
-2. **Phase 3** - 백엔드 완성
-3. **Phase 5** - 프론트 핵심 기능
-4. **Phase 6** - 프론트 완성
-5. **Phase 7-8** - 안정성 확보
-6. **Phase 9-11** - 품질 및 배포 준비
+1. **Phase 8** - 프론트 테스트 확장(E2E 포함)
+2. **Phase 9** - 보안 감사
+3. **Phase 10-11** - 문서/최종 통합
 
 ---
 
@@ -209,7 +294,7 @@ cd ~/projects/auth-system
 - `99d0a21` - Update PROGRESS.md
 - `e8d522c` - Add comprehensive documentation
 
-**다음 커밋:** Phase 2 Core Services 완료 시
+**다음 커밋:** Phase 7 완료 + Phase 8(E2E/컴포넌트 테스트) 반영
 
 ---
 

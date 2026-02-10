@@ -18,7 +18,9 @@
         "name": "next"
       }
     ],
+    "types": ["jest", "@testing-library/jest-dom"],
     "paths": {
+      "@contracts": ["../contracts/api-contracts.d.ts"],
       "@/*": ["./*"]
     }
   },

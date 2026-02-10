@@ -1,53 +1,46 @@
-/**
- * User type representing authenticated user data
- */
-export interface User {
-  id: string;
-  email: string;
-  name?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import type {
+  ApiErrorPayload,
+  ForgotPasswordRequestContract,
+  LoginRequestContract,
+  LoginResponseContract,
+  MessageResponseContract,
+  RefreshResponseContract,
+  RegisterRequestContract,
+  RegisterResponseContract,
+  ResetPasswordRequestContract,
+  UpdateProfileRequestContract,
+  UserContract,
+} from "@contracts";
 
-/**
- * Auth response from login/register endpoints
- */
-export interface AuthResponse {
-  token: string;
-  user: User;
-}
+export type User = UserContract;
+export type LoginResponse = LoginResponseContract;
+export type RegisterResponse = RegisterResponseContract;
+export type MessageResponse = MessageResponseContract;
+export type RefreshResponse = RefreshResponseContract;
+export type LoginCredentials = LoginRequestContract;
+export type RegisterCredentials = RegisterRequestContract;
+export type ForgotPasswordRequest = ForgotPasswordRequestContract;
+export type ResetPasswordRequest = ResetPasswordRequestContract;
+export type UpdateProfileRequest = UpdateProfileRequestContract;
 
 /**
  * API error response structure
  */
 export interface ApiError {
   message: string;
-  errors?: Record<string, string[]>;
+  error?: ApiErrorPayload["error"];
+  details?: Array<{
+    path: string;
+    message: string;
+  }>;
   statusCode?: number;
 }
 
 /**
  * Generic API response wrapper
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: ApiError;
   success: boolean;
-}
-
-/**
- * Login credentials
- */
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-/**
- * Register credentials
- */
-export interface RegisterCredentials {
-  email: string;
-  password: string;
-  name?: string;
 }

@@ -6,6 +6,10 @@ node_modules/
 # Testing
 coverage/
 *.log
+playwright-report/
+test-results/
+frontend/playwright-report/
+frontend/test-results/
 
 # Next.js
 .next/

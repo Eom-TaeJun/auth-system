@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { query } from '../config/database';
 
 /**
@@ -28,17 +29,23 @@ export interface CreateVerificationTokenData {
   expires_at: Date;
 }
 
+function hashVerificationToken(token: string): string {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
 /**
  * Creates a new verification token
  * @param {CreateVerificationTokenData} data - Token creation data
  * @returns {Promise<VerificationToken>} Created token object
  */
 export async function create(data: CreateVerificationTokenData): Promise<VerificationToken> {
+  const tokenHash = hashVerificationToken(data.token);
+
   const result = await query<VerificationToken>(
     `INSERT INTO verification_tokens (user_id, token, token_type, expires_at)
      VALUES ($1, $2, $3, $4)
      RETURNING *`,
-    [data.user_id, data.token, data.token_type, data.expires_at]
+    [data.user_id, tokenHash, data.token_type, data.expires_at]
   );
 
   return result.rows[0];
@@ -50,9 +57,11 @@ export async function create(data: CreateVerificationTokenData): Promise<Verific
  * @returns {Promise<VerificationToken | null>} Token object or null if not found
  */
 export async function findByToken(token: string): Promise<VerificationToken | null> {
+  const tokenHash = hashVerificationToken(token);
+
   const result = await query<VerificationToken>(
     'SELECT * FROM verification_tokens WHERE token = $1',
-    [token]
+    [tokenHash]
   );
 
   return result.rows[0] || null;
@@ -88,13 +97,15 @@ export async function findValidToken(
   token: string,
   tokenType: TokenType
 ): Promise<VerificationToken | null> {
+  const tokenHash = hashVerificationToken(token);
+
   const result = await query<VerificationToken>(
     `SELECT * FROM verification_tokens
      WHERE token = $1
        AND token_type = $2
        AND used_at IS NULL
        AND expires_at > NOW()`,
-    [token, tokenType]
+    [tokenHash, tokenType]
   );
 
   return result.rows[0] || null;

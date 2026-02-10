@@ -127,8 +127,10 @@ npm run test --workspace=backend
 npm run test --workspace=frontend
 
 # E2E tests
-cd frontend && npm run test:e2e
+npm run test:e2e --workspace=frontend
 ```
+
+`frontend`의 `test:e2e`는 Playwright 실행 전 Linux 런타임 라이브러리(`libnspr4`, `libnss3`)를 확인하고, 누락 시 사용자 캐시에 로컬 fallback을 준비한 뒤 실행합니다.
 
 ## Security Features
 
