@@ -46,7 +46,7 @@ export interface LoginResponseContract {
 }
 
 export interface RegisterResponseContract {
-  userId: string;
+  userId?: string;
   message: string;
 }
 

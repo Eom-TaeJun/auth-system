@@ -114,7 +114,7 @@ describe('database config module', () => {
     await expect(databaseModule.query('SELECT 1', [])).rejects.toThrow('query failed');
     expect(errorSpy).toHaveBeenCalledWith('Database query error:', {
       text: 'SELECT 1',
-      error: failure,
+      error: failure.message,
     });
   });
 

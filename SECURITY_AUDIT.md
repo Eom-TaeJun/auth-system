@@ -65,16 +65,26 @@
 
 ### 3) Authentication responses can aid account enumeration
 
-- Severity: **LOW**
-- Status: **PARTIALLY FIXED**
+- Severity: **MEDIUM**
+- Status: **FIXED** (2026-02-12)
 - Risk:
   - Different messages/codes (e.g. duplicate email, unverified account) can reveal account state.
 - Affected:
   - `backend/src/services/authService.ts`
 - Fix applied:
   - Login now returns a generic invalid-credentials error even when email is unverified.
-- Remaining recommendation:
-  - Consider normalizing duplicate-email behavior in registration for stricter anti-enumeration.
+  - **Registration now returns generic success message for duplicate emails** (2026-02-12):
+    - Changed from throwing 409 error to silently returning success message
+    - No duplicate verification email sent (prevents spam)
+    - Updated `contracts/api-contracts.d.ts` to make `userId` optional
+    - Test coverage: `backend/tests/unit/authService.test.ts:146-158`
+- Previous behavior:
+  - Duplicate email: 409 status with "Email already exists" message
+  - New email: 201 status with success message
+  - **This allowed attackers to enumerate valid emails**
+- New behavior:
+  - Both scenarios: 201 status with "Registration successful. Please verify your email."
+  - **Attackers cannot determine if email is already registered**
 
 ### 4) Missing hardened security headers middleware
 
@@ -97,12 +107,82 @@
 
 ## Approval Status
 
-⚠️ APPROVED WITH WARNINGS
+✅ APPROVED
 
-- No open CRITICAL/HIGH issues found in this audit pass.
-- One LOW recommendation remains: stricter anti-enumeration normalization on registration duplicate-email behavior.
+- No open CRITICAL/HIGH/MEDIUM issues found.
+- All enumeration vulnerabilities resolved (2026-02-12).
+- System ready for production deployment.
+
+## Manual Review Items (Completed 2026-02-12)
+
+### Item 1: Registration enumeration hardening
+- **Location**: `/home/tj/projects/auth-system/backend/src/services/authService.ts:47-79`
+- **Severity**: MEDIUM (upgraded from LOW due to direct enumeration attack vector)
+- **Status**: ✅ FIXED (2026-02-12)
+- **Fix implemented**:
+  - Changed registration flow to prevent email enumeration
+  - Duplicate emails now return 201 success with generic message (not 409 error)
+  - No verification email sent for duplicates (prevents spam)
+  - Contract updated: `userId` field now optional in RegisterResponseContract
+  - Test coverage added: `backend/tests/unit/authService.test.ts:146-158`
+- **Remaining consideration**:
+  - Potential timing side-channel through response time differences
+  - **Assessment**: Minimal risk. Timing attacks require sophisticated measurement and provide limited value compared to direct enumeration which is now prevented.
+
+### Item 2: CSP policy tuning
+- **Location**: `/home/tj/projects/auth-system/backend/src/index.ts:27-30`
+- **Severity**: INFORMATIONAL
+- **Status**: NO ACTION NEEDED
+- **Assessment**:
+  - CSP is conditionally enabled in production (line 28)
+  - Backend is API-only (serves JSON, not HTML)
+  - All routes return JSON: `/api/auth/*`, `/api/users/*`, `/health`
+  - **Decision**: Current configuration is appropriate. CSP is primarily for protecting HTML content from XSS; not applicable to pure JSON APIs.
+
+### Item 3: Token refresh timing side-channel
+- **Location**: `/home/tj/projects/auth-system/frontend/lib/api.ts:186-208`
+- **Severity**: LOW
+- **Status**: ACCEPTED RISK
+- **Assessment**:
+  - `refreshAccessToken` function has different execution paths for success/failure
+  - Success path: validates httpOnly cookie, generates new token, returns value
+  - Failure path: clears token, returns null
+  - Timing differences could theoretically reveal refresh token validity
+  - **Mitigations in place**:
+    - Refresh tokens stored as httpOnly cookies (inaccessible to JavaScript)
+    - CORS restricted to specific frontend origin
+    - Tokens are hashed in database
+  - **Decision**: Risk accepted. Timing attack requires attacker to repeatedly trigger refresh with victim's cookies, which CORS and SameSite protections prevent.
+
+### Item 4: Middleware security architecture
+- **Location**: `/home/tj/projects/auth-system/backend/src/index.ts`
+- **Severity**: INFORMATIONAL
+- **Status**: NO ACTION NEEDED
+- **Assessment**:
+  - No dedicated middleware directory found (only `errorHandler`)
+  - Security middleware appropriately configured at application level:
+    - `@fastify/helmet` (lines 27-30): Security headers including CSP
+    - `@fastify/cors` (lines 20-23): Origin restrictions and credentials
+    - `@fastify/rate-limit` (lines 32-35): DDoS protection
+    - `@fastify/cookie` (line 25): Secure cookie handling
+  - **Decision**: Current architecture is sound. Fastify plugins provide enterprise-grade security controls without custom middleware.
 
 ## Next Actions
 
-1. Optionally normalize duplicate-email registration responses for stricter anti-enumeration.
-2. Tune CSP policy further if API starts serving HTML assets.
+1. ~~Optionally normalize duplicate-email registration responses for stricter anti-enumeration.~~ ✅ FIXED (2026-02-12)
+2. ~~Tune CSP policy further if API starts serving HTML assets.~~ ✓ REVIEWED - Not applicable for JSON API
+3. All 4 manual review items assessed and documented.
+4. ~~Fix MEDIUM severity enumeration vulnerability~~ ✅ FIXED (2026-02-12)
+
+## Summary of 2026-02-12 Security Fix
+
+**Issue**: Registration endpoint revealed email existence through different status codes
+- Duplicate email: 409 "Email already exists"
+- New email: 201 "Registration successful"
+
+**Fix**: Normalized all registration responses to prevent enumeration
+- All attempts: 201 "Registration successful. Please verify your email."
+- Backend silently skips duplicate registrations without sending email
+- Test suite updated and passing
+
+**Impact**: MEDIUM severity vulnerability eliminated. System now production-ready.

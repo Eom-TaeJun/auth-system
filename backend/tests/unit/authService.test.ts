@@ -143,17 +143,18 @@ describe('Auth Service', () => {
       );
     });
 
-    it('rejects duplicate email', async () => {
+    it('returns success for duplicate email without revealing existence (anti-enumeration)', async () => {
       mockedUserModel.existsByEmail.mockResolvedValue(true);
 
-      await expect(
-        authService.register({
-          email: 'existing@example.com',
-          password: 'Test123!@#',
-        })
-      ).rejects.toMatchObject({
-        code: ErrorCodes.EMAIL_EXISTS,
+      const result = await authService.register({
+        email: 'existing@example.com',
+        password: 'Test123!@#',
       });
+
+      expect(result.message).toBe('Registration successful. Please verify your email.');
+      expect(result.userId).toBeUndefined();
+      expect(mockedUserModel.create).not.toHaveBeenCalled();
+      expect(mockedEmailService.sendVerificationEmail).not.toHaveBeenCalled();
     });
 
     it('rejects weak password', async () => {

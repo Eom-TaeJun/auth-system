@@ -43,6 +43,9 @@ export type RegisterResult = RegisterResponseContract;
 
 /**
  * Creates a new account and sends an email verification token.
+ *
+ * Security: Returns generic success message regardless of whether email exists
+ * to prevent account enumeration attacks.
  */
 export async function register(data: RegisterData): Promise<RegisterResult> {
   const email = validators.normalizeEmail(data.email);
@@ -51,7 +54,11 @@ export async function register(data: RegisterData): Promise<RegisterResult> {
 
   const exists = await UserModel.existsByEmail(email);
   if (exists) {
-    throw new AuthError('Email already exists', ErrorCodes.EMAIL_EXISTS, 409);
+    // Silently fail - return success message to prevent enumeration
+    // Do not send duplicate verification email to avoid spam
+    return {
+      message: 'Registration successful. Please verify your email.',
+    };
   }
 
   const passwordHash = await passwordUtils.hashPassword(data.password);

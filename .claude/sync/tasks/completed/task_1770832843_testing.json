@@ -1,0 +1,16 @@
+{
+  "id": "task_1770832843_testing",
+  "from_team": "alpha",
+  "to_team": "beta",
+  "type": "testing",
+  "priority": "high",
+  "files": [
+    "frontend/lib/api.ts",
+    "frontend/lib/authToken.ts",
+    "frontend/hooks/useAuth.tsx",
+    "frontend/app/(auth)/"
+  ],
+  "description": "Task #5: Improve frontend test coverage from 49.74% to 80%+\n\nCurrent Status:\n- Backend coverage: 99.4% (excellent)\n- Frontend coverage: 49.74% (below target)\n\nFiles needing tests:\n- frontend/lib/api.ts (0% coverage)\n- frontend/lib/authToken.ts (0% coverage)  \n- frontend/hooks/useAuth.tsx (0% coverage)\n- frontend/app/(auth)/ pages (low coverage)\n\nRequirements:\n- Target coverage: 80%+ for each file\n- Test framework: Jest + React Testing Library\n- Test scenarios: Success cases, error handling, edge cases\n- All tests must pass\n\nUse beta-qa for test generation. Can leverage codex exec for efficiency.",
+  "created_at": "2026-02-12T02:00:43+00:00",
+  "assigned_to": "beta-qa"
+}
