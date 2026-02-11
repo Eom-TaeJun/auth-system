@@ -25,7 +25,7 @@ export async function createApp(): Promise<FastifyInstance> {
   await app.register(cookie);
 
   await app.register(helmet, {
-    contentSecurityPolicy: false,
+    contentSecurityPolicy: config.app.nodeEnv === 'production',
     global: true,
   });
 

@@ -25,7 +25,7 @@ export function generateAccessToken(userId: string): string {
   return jwt.sign(
     { userId } as AccessTokenPayload,
     config.jwt.accessSecret,
-    { expiresIn }
+    { expiresIn, algorithm: 'HS256' }
   );
 }
 
@@ -34,7 +34,7 @@ export function generateAccessToken(userId: string): string {
  */
 export function verifyAccessToken(token: string): AccessTokenPayload | null {
   try {
-    const decoded = jwt.verify(token, config.jwt.accessSecret);
+    const decoded = jwt.verify(token, config.jwt.accessSecret, { algorithms: ['HS256'] });
     if (typeof decoded === 'string') {
       return null;
     }

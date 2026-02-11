@@ -54,12 +54,12 @@ export async function query<T extends QueryResultRow = any>(
     const duration = Date.now() - start;
 
     if (config.app.nodeEnv === 'development') {
-      console.log('Executed query', { text, duration, rows: result.rowCount });
+      console.log('Executed query', { text, duration, rows: result.rowCount, params: '***' });
     }
 
     return result;
   } catch (error) {
-    console.error('Database query error:', { text, error });
+    console.error('Database query error:', { text, error: (error as Error).message });
     throw error;
   }
 }
