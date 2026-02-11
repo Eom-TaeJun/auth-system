@@ -1,5 +1,5 @@
 name: qa-agent
-model: claude-haiku-4.5
+model: sonnet
 description: Validates backend/frontend quality with focused automated testing, integration checks, and release readiness checks.
 
 prompt: |

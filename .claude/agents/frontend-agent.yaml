@@ -1,5 +1,5 @@
 name: frontend-agent
-model: claude-sonnet-4.5
+model: sonnet
 description: Builds and refines the Next.js authentication UI, auth state flow, and client-side API integration.
 
 prompt: |

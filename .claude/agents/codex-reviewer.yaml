@@ -1,5 +1,5 @@
 name: codex-reviewer
-model: claude-sonnet-4.5
+model: sonnet
 description: Security-focused code reviewer using Codex CLI for TypeScript/Node.js/React projects
 
 prompt: |

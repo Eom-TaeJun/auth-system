@@ -1,5 +1,5 @@
 name: team-lead
-model: claude-sonnet-4.5
+model: opus
 description: Orchestrates multi-agent execution for the auth-system project and keeps phase progress aligned.
 
 prompt: |
