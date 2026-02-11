@@ -1,12 +1,13 @@
 # Security Audit Report
 
-**Date:** 2026-02-10  
+**Date:** 2026-02-11  
 **Project:** `/home/tj/projects/auth-system`  
 **Scope:** Backend auth/token flows, frontend token handling, API boundary behaviors
 
 ## Audit Method
 
-- Attempted automated review with `codex review --uncommitted` (failed due upstream network disconnections).
+- Attempted automated review with `codex review --uncommitted` on 2026-02-10 and 2026-02-11.
+  - Both attempts failed due upstream network disconnections to `https://chatgpt.com/backend-api/codex/responses`.
 - Completed manual code review across:
   - `backend/src/index.ts`
   - `backend/src/routes/*.ts`
@@ -16,6 +17,22 @@
   - `frontend/lib/api.ts`
   - `frontend/hooks/useAuth.tsx`
   - auth/protected frontend pages and tests
+
+## Re-Audit Notes (2026-02-11)
+
+- Reviewed security-sensitive controls after frontend test expansion:
+  - No `localStorage` / `sessionStorage` token persistence.
+  - No `dangerouslySetInnerHTML`, `eval`, or `Function` usage in app code.
+  - Access/refresh token flow unchanged:
+    - Refresh token remains `httpOnly` cookie.
+    - Access token remains in-memory only (`frontend/lib/authToken.ts`).
+  - API protections unchanged:
+    - Route-level rate limiting in `backend/src/routes/schemas/authSchemas.ts`.
+    - Explicit CORS origin and credentials mode in `backend/src/index.ts`.
+    - SQL operations remain parameterized in models/migrations.
+- Added and passed additional frontend test coverage for auth edge cases:
+  - `frontend/tests/password-recovery-pages.test.tsx`
+  - `frontend/e2e/auth-flows.spec.ts` (8 scenarios)
 
 ## Findings
 
@@ -77,6 +94,13 @@
 - `npm run type-check --workspace=frontend` passed
 - `npm run test --workspace=frontend -- --runInBand` passed
 - `npm run test:e2e --workspace=frontend` passed
+
+## Approval Status
+
+⚠️ APPROVED WITH WARNINGS
+
+- No open CRITICAL/HIGH issues found in this audit pass.
+- One LOW recommendation remains: stricter anti-enumeration normalization on registration duplicate-email behavior.
 
 ## Next Actions
 

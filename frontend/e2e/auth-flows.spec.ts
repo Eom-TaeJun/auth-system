@@ -62,6 +62,24 @@ test("verify-email page consumes token and shows success state", async ({
   );
 });
 
+test("verify-email page shows error state when token is invalid", async ({
+  page,
+}) => {
+  await page.route("**/api/auth/verify-email**", async (route) => {
+    await route.fulfill({
+      status: 400,
+      contentType: "application/json",
+      body: JSON.stringify({
+        message: "Invalid or expired token",
+      }),
+    });
+  });
+
+  await page.goto("/verify-email?token=expired-token");
+
+  await expect(page.getByText("Invalid or expired token")).toBeVisible();
+});
+
 test("login reaches dashboard and profile update persists via mocked APIs", async ({
   page,
 }) => {
@@ -143,4 +161,76 @@ test("login reaches dashboard and profile update persists via mocked APIs", asyn
   await expect(page.getByLabel("Email")).toHaveValue("updated@example.com");
   await expect(page.getByText("Profile updated")).toBeVisible();
   expect(lastPatchedEmail).toBe("updated@example.com");
+});
+
+test("login failure stays on login and shows error message", async ({
+  page,
+}) => {
+  await page.route("**/api/auth/login", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 401,
+      contentType: "application/json",
+      body: JSON.stringify({
+        message: "Invalid credentials",
+      }),
+    });
+  });
+
+  await page.goto("/login");
+  await page.getByLabel("Email").fill("user@example.com");
+  await page.getByLabel("Password").fill("WrongPassword1!");
+  await page.getByRole("button", { name: "Sign in" }).click();
+
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(page.getByText("Invalid credentials")).toBeVisible();
+});
+
+test("protected route bootstraps session via refresh endpoint", async ({
+  page,
+}) => {
+  await page.route("**/api/auth/refresh", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        accessToken: "fresh-access-token",
+      }),
+    });
+  });
+
+  await page.route("**/api/users/me", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        id: "user-1",
+        email: "session@example.com",
+        email_verified: true,
+      }),
+    });
+  });
+
+  await page.goto("/dashboard");
+
+  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(
+    page.getByText("session@example.com", { exact: true })
+  ).toBeVisible();
+  await expect(page.getByText("This is your protected dashboard.")).toBeVisible();
+});
+
+test("reset-password page without token keeps submit disabled", async ({
+  page,
+}) => {
+  await page.goto("/reset-password");
+
+  await expect(
+    page.getByText("Missing reset token. Open this page from the reset link in your email.")
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Update password" })).toBeDisabled();
 });

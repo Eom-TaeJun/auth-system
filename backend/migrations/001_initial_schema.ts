@@ -9,9 +9,6 @@ const migration: Migration = {
   async up() {
     const pool = getPool();
 
-    // Enable UUID extension
-    await pool.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
-
     // Create users table
     await pool.query(`
       CREATE TABLE users (

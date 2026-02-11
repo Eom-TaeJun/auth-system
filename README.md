@@ -23,8 +23,8 @@ A production-ready authentication system built with Node.js, Next.js, and Postgr
 - **Testing:** Jest
 
 ### Frontend
-- **Framework:** Next.js 16 App Router
-- **UI Library:** React 19
+- **Framework:** Next.js 14 App Router
+- **UI Library:** React 18
 - **Styling:** Tailwind CSS + Shadcn/ui
 - **Forms:** react-hook-form + Zod
 - **HTTP Client:** Axios
@@ -96,6 +96,7 @@ auth-system/
 │   ├── hooks/           # Custom hooks (useAuth)
 │   ├── lib/             # Utilities, API client
 │   └── tests/           # Frontend tests
+├── docs/                # API, architecture, deployment docs
 └── docker-compose.yml   # PostgreSQL containers
 ```
 
@@ -168,10 +169,10 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system architecture details
 
 Built with Claude Code Agent Teams:
 - Lead Agent (Opus 4.6) - Architecture & coordination
-- Backend Agent (Sonnet 4.5) - API & database
-- Frontend Agent (Sonnet 4.5) - UI & forms
-- QA Agent (Haiku 4.5) - Testing
-- Codex Reviewer (Sonnet 4.5) - Security audit
+- Backend Agent (Sonnet) - API & database
+- Frontend Agent (Sonnet) - UI & forms
+- QA Agent (Sonnet) - Testing
+- Codex Reviewer (Sonnet) - Security audit
 
 ## License
 

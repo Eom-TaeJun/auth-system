@@ -10,6 +10,10 @@ export interface Migration {
   down: () => Promise<void>;
 }
 
+type MigrationModule = {
+  default?: Partial<Migration>;
+} & Partial<Migration>;
+
 /**
  * Creates the migrations tracking table if it doesn't exist
  */
@@ -74,6 +78,19 @@ async function getMigrationFiles(): Promise<string[]> {
     .sort();
 }
 
+function toMigration(moduleValue: MigrationModule, fileName: string): Migration {
+  const candidate = (moduleValue.default ?? moduleValue) as Partial<Migration>;
+
+  if (
+    typeof candidate.up === 'function' &&
+    typeof candidate.down === 'function'
+  ) {
+    return candidate as Migration;
+  }
+
+  throw new Error(`Migration file "${fileName}" does not export valid up/down functions`);
+}
+
 /**
  * Runs pending migrations
  */
@@ -98,7 +115,8 @@ async function runMigrationsUp(): Promise<void> {
     console.log(`Migrating: ${file}`);
 
     const migrationPath = resolve(__dirname, '../../migrations', file);
-    const migration: Migration = await import(migrationPath);
+    const moduleValue = (await import(migrationPath)) as MigrationModule;
+    const migration = toMigration(moduleValue, file);
 
     try {
       await migration.up();
@@ -131,7 +149,8 @@ async function runMigrationDown(): Promise<void> {
   console.log(`Rolling back: ${lastMigration}`);
 
   const migrationPath = resolve(__dirname, '../../migrations', lastMigration);
-  const migration: Migration = await import(migrationPath);
+  const moduleValue = (await import(migrationPath)) as MigrationModule;
+  const migration = toMigration(moduleValue, lastMigration);
 
   try {
     await migration.down();
