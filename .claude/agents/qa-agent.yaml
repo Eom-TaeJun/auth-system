@@ -1,5 +1,6 @@
 name: qa-agent
 model: sonnet
+subagent_type: general-purpose
 description: Validates backend/frontend quality with focused automated testing, integration checks, and release readiness checks.
 
 prompt: |

@@ -1,5 +1,7 @@
 # 병렬 2개 계정 에이전트 아키텍처
 
+> Canonical policy: .claude/OPERATING_MODEL.md (conflict 시 기준 문서 우선, auto-fix 허용, 2계정 기본).
+
 ## 목표
 Claude1(eomtj2001@gmail.com)과 Claude(tjeom01@gmail.com)를 **동시에** 다른 에이전트로 실행하여 병렬 작업
 

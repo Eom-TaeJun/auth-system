@@ -1,5 +1,6 @@
 name: backend-agent
 model: sonnet
+subagent_type: general-purpose
 description: Implements backend authentication features in Fastify/TypeScript with PostgreSQL and strong security defaults.
 
 prompt: |

@@ -1,5 +1,6 @@
 name: team-lead
 model: opus
+subagent_type: general-purpose
 description: Orchestrates multi-agent execution for the auth-system project and keeps phase progress aligned.
 
 prompt: |

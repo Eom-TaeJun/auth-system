@@ -1,5 +1,7 @@
 # 용량 최적화 전략: Claude vs Codex 역할 분담
 
+> Canonical policy: .claude/OPERATING_MODEL.md (conflict 시 기준 문서 우선, auto-fix 허용, 2계정 기본).
+
 ## 📊 용량 현황
 
 ### Claude (제한적)

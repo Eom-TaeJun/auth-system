@@ -1,5 +1,7 @@
 # 🚀 병렬 2개 계정 Team Agents 빠른 시작 가이드
 
+> Canonical policy: .claude/OPERATING_MODEL.md (conflict 시 기준 문서 우선, auto-fix 허용, 2계정 기본).
+
 ## ✅ 완료된 개선 사항
 
 ### 1. Codex에게 코드 수정 권한 부여 ✅

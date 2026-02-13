@@ -1,5 +1,7 @@
 # 2개 Claude 계정 활용 전략
 
+> Canonical policy: .claude/OPERATING_MODEL.md (conflict 시 기준 문서 우선, auto-fix 허용, 2계정 기본).
+
 ## 현재 계정 상황
 - **계정 1 (claude)**: tjeom01@gmail.com - Claude Pro
 - **계정 2 (claude1)**: eomtj2001@gmail.com - Claude Pro + Extra Usage

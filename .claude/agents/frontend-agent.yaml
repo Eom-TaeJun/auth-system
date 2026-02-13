@@ -1,5 +1,6 @@
 name: frontend-agent
 model: sonnet
+subagent_type: general-purpose
 description: Builds and refines the Next.js authentication UI, auth state flow, and client-side API integration.
 
 prompt: |

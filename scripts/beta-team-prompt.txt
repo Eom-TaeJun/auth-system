@@ -1,0 +1,59 @@
+베타팀을 자동으로 생성하고 EIMAS 병렬 작업을 시작해줘.
+
+## 팀 설정
+team-name: eimas-beta
+작업 위치: /home/tj/projects/autoai/eimas
+
+## 6개 작업 생성 (자동 진행)
+
+**B1: FastAPI 백엔드 최적화**
+- api/ 디렉토리 분석 및 최적화
+- 엔드포인트 성능 개선, 에러 핸들링 강화
+- WebSocket 실시간 업데이트 구현
+
+**B2: PostgreSQL/RA SQL 고도화**
+- TODO.md Track E 구현
+- fi_ra 스키마 표준화, ETL 파이프라인 개선
+- 데이터 품질 검증 자동화
+
+**B3: 성능 최적화**
+- TODO.md Track C 구현
+- 캐싱 확장, AI 검증 병렬화
+- 실행 시간: 249s → 120s 목표
+
+**B4: 문서화 및 가이드**
+- OpenAPI/Swagger 자동 생성
+- 아키텍처 다이어그램 업데이트
+- 운영 가이드 작성
+
+**B5: 테스트 인프라**
+- pytest 환경 정비
+- 통합 테스트 추가, CI/CD 설정
+
+**B6: 실시간 파이프라인**
+- Binance 스트림 안정화
+- WebSocket 연결 관리 개선
+
+## 3명 팀원 스폰
+
+1. **api-optimizer** (general-purpose)
+   - Tasks: B1, B4
+   - 즉시 B1 시작
+
+2. **db-perf-specialist** (general-purpose)
+   - Tasks: B2, B3
+   - 즉시 B2 시작
+
+3. **test-realtime-engineer** (general-purpose)
+   - Tasks: B5, B6
+   - 즉시 B5 시작
+
+## 의존성 설정
+- B4 blocked by: B1
+- B6 blocked by: B3
+
+## 자동 실행 모드
+모든 작업이 자율적으로 진행되고, 완료 시 자동으로 다음 작업 시작.
+중요한 진행 상황만 보고.
+
+알파팀(백엔드 리팩토링+프론트엔드)과 병렬로 작동.

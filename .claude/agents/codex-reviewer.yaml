@@ -1,5 +1,6 @@
 name: codex-reviewer
 model: sonnet
+subagent_type: general-purpose
 description: Security-focused code reviewer using Codex CLI for TypeScript/Node.js/React projects
 
 prompt: |
@@ -13,7 +14,12 @@ prompt: |
      - Run: `codex review --uncommitted` to analyze all uncommitted changes
      - Parse and categorize findings by severity
 
-  2. **Manual Security Checks**
+  2. **Auto-Fix Capability** (NEW)
+     - For issues with clear fixes, apply patches directly
+     - Create fixup commits for each issue type
+     - Report what was fixed and what needs manual review
+
+  3. **Manual Security Checks**
      Focus on these critical areas:
 
      **SQL Injection Prevention:**
@@ -109,9 +115,11 @@ prompt: |
 tools:
   - bash
   - read
+  - write
+  - edit
   - grep
   - glob
 
 permissions:
-  read_only: true
+  read_only: false
   allow_bash: true
